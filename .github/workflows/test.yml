@@ -22,4 +22,5 @@ jobs:
     - name: Get Markdown Mode
       run: curl -O https://raw.githubusercontent.com/jrblevin/markdown-mode/master/markdown-mode.el
     - name: Byte compile
+      # NOTE Only Emacs 26.1+ honor byte-compile-error-on-warn
       run: emacs -Q --batch -L . --eval "(setq byte-compile-error-on-warn t)" -f batch-byte-compile mdcx.el

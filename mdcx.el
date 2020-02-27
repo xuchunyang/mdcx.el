@@ -31,16 +31,13 @@
 
 (defun mdcx-code-block-at-pos (&optional pos)
   (pcase (markdown-get-enclosing-fenced-block-construct pos)
-    ((and `(,code-begin ,code-end . ,_)
-          (let lang-begin
-            (progn (goto-char code-begin)
-                   (line-beginning-position 2)))
-          (let lang-end
-            (progn (goto-char code-end)
-                   (line-beginning-position)))
-          (let lang
-            (markdown-code-block-lang)))
-     (list lang lang-begin lang-end))))
+    (`(,code-begin ,code-end . ,_)
+     (let ((lang-begin (progn (goto-char code-begin)
+                              (line-beginning-position 2)))
+           (lang-end (progn (goto-char code-end)
+                            (line-beginning-position)))
+           (lang (markdown-code-block-lang)))
+       (list lang lang-begin lang-end)))))
 
 (defun mdcx-next-result-block ()
   (catch 'result
