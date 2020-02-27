@@ -58,12 +58,15 @@
     ('nil
      (insert (format "\n\n```result\n%s\n```\n" result)))
     (`(,_ ,b ,e)
-     (delete-region b e)
+     (delete-region b (1- e))
      (goto-char b)
      (insert result))))
 
 (defun mdcx-run-shell (src)
-  (shell-command-to-string src))
+  (let ((result (shell-command-to-string src)))
+    (if (string-suffix-p "\n" result)
+        (substring result 0 -1)
+      result)))
 
 (defun mdcx-run (lang src)
   (let ((fun (intern-soft (format "mdcx-run-%s" lang))))
