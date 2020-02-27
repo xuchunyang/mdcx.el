@@ -23,7 +23,7 @@
 
 ;;; Commentary:
 
-;; XXX add something here
+;; Run Markdown code block at point and insert the result, inspired by Org Mode.
 
 ;;; Code:
 
@@ -69,13 +69,16 @@
       result)))
 
 (defun mdcx-run (lang src)
-  (let ((fun (intern-soft (format "mdcx-run-%s" lang))))
+  (let* ((fname (format "mdcx-run-%s" lang))
+         (fun (intern-soft fname)))
     (if (fboundp fun)
         (funcall fun src)
-      (user-error "No idea how to run %s code, defun `%s' to support it"
-                  lang fun))))
+      (user-error "No idea how to run %s code, defun %s to support it"
+                  lang fname))))
 
+;;;###autoload
 (defun mdcx ()
+  "Execute Markdown Code Block at point."
   (interactive)
   (pcase (save-excursion (mdcx-code-block-at-pos))
     ('nil (user-error "Not inside a GFM fenced code block"))
