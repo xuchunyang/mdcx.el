@@ -38,7 +38,7 @@
           (let lang-end
             (progn (goto-char code-end)
                    (line-beginning-position)))
-          (let (and (pred identity) lang)
+          (let lang
             (markdown-code-block-lang)))
      (list lang lang-begin lang-end))))
 
@@ -75,6 +75,8 @@
 (defun mdcx ()
   (interactive)
   (pcase (save-excursion (mdcx-code-block-at-pos))
+    ('nil (user-error "Not inside a GFM fenced code block"))
+    (`(nil . ,_) (user-error "No language for this code block"))
     (`(,lang ,lang-begin ,lang-end)
      (save-excursion
        (goto-char lang-end)
